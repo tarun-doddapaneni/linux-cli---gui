@@ -1,0 +1,72 @@
+step 1. To confirm the version that you're running, run the following command:
+
+$ grep PRETTY_NAME /etc/os-release 
+
+ (or)
+
+$ cat /etc/os-release
+
+step 2.  Install MATE packages.
+
+$ sudo amazon-linux-extras install mate-desktop1.x
+
+step 3. Define MATE as your default desktop for all users.
+
+$ sudo bash -c 'echo PREFERRED=/usr/bin/mate-session > /etc/sysconfig/desktop'
+
+step 4.Install TigerVNC Server
+
+$ sudo yum install tigervnc-server
+
+step 5. Configure a VNC-specific password.
+
+$ vncpasswd
+
+step 6. Restrict VNC network access to the localhost, so that VNC can be accessed only by using a secure SSH tunnel and
+
+and Create a tigervnc configuration directory.
+
+$ sudo mkdir /etc/tigervnc
+
+step 7. Create a mandatory configuration file containing the localhost option.
+
+$ sudo bash -c 'echo localhost > /etc/tigervnc/vncserver-config-mandatory'
+
+step 8. Start the VNC Server on display number 1, and cause it to always start at boot time and Create a new systemd unit.
+
+$ sudo cp /lib/systemd/system/vncserver@.service /etc/systemd/system/vncserver@.service
+
+
+step 9. Use the sed command to replace all occurrences of USER in the new unit with ec2-user.
+
+$ sudo sed -i 's/<USER>/ec2-user/' /etc/systemd/system/vncserver@.service
+
+step 10. Reload the systemd manager configuration.
+
+$sudo systemctl daemon-reload
+
+step 11. Enable & Start the service.
+
+$ sudo systemctl enable --now vncserver@:1
+
+step 12. Connect to the GUI using VNC
+
+install the tiger vnc in your platform os from the https://tigervnc.org/
+
+step 13. When connecting to your instance using SSH, add the -L parameter to activate port forwarding. 
+
+and Replace PEM_FILE with your private key, and INSTANCE_IP with your instance's public
+
+
+I'm using from windows command prompt using the below command with public ip
+
+>>>>ssh -L 5901:localhost:5901 -i PEM_FILE ec2-user@public ip
+
+### creating a tunnel to forward all traffic on local port 5901/TCP (VNC) to the instance's VNC server.
+
+
+
+
+
+
+
